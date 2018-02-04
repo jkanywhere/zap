@@ -432,7 +432,7 @@ func (l loggable) MarshalLogArray(enc ArrayEncoder) error {
 	return nil
 }
 
-// maybeNamespace is an ObjectMarhsaler that sometimes opens a namespace
+// maybeNamespace is an ObjectMarshaler that sometimes opens a namespace
 type maybeNamespace struct{ bool }
 
 func (m maybeNamespace) MarshalLogObject(enc ObjectEncoder) error {
