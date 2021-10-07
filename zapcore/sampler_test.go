@@ -28,6 +28,7 @@ import (
 	"time"
 
 	"go.uber.org/atomic"
+	"go.uber.org/zap"
 	"go.uber.org/zap/internal/ztest"
 	. "go.uber.org/zap/zapcore"
 	"go.uber.org/zap/zaptest/observer"
@@ -86,6 +87,31 @@ func TestSampler(t *testing.T) {
 		}
 		assertSequence(t, logs.TakeAll(), lvl, 1, 2, 5, 8)
 	}
+}
+
+func TestSamplerUniqueMessages(t *testing.T) {
+	sampler, logs := fakeSampler(DebugLevel, time.Minute, 2, 3)
+	logger := zap.New(sampler)
+
+	const (
+		inner = 50
+		outer = 100
+	)
+
+	for i := 0; i < outer; i++ {
+		for j := 0; j < inner; j++ {
+			msg := fmt.Sprintf("msg %d:%d", i, j)
+			logger.Info(msg)
+		}
+	}
+
+	gotEntries := logs.TakeAll()
+	wantEntryCount := inner * outer
+
+	// All messages were unique, we expect they were all emitted.
+	assert.Len(t, gotEntries, wantEntryCount,
+		"unexpected number of log entries: want %d, got %d", wantEntryCount, len(gotEntries),
+	)
 }
 
 func TestSamplerDisabledLevels(t *testing.T) {
