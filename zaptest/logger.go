@@ -142,6 +142,11 @@ func (w TestingWriter) Write(p []byte) (n int, err error) {
 	// Strip trailing newline because t.Log always adds one.
 	p = bytes.TrimRight(p, "\n")
 
+	// If supported, indicate that this Write function should be skipped
+	// printing file and line information.
+	if h, ok := w.t.(helperT); ok {
+		h.Helper()
+	}
 	// Note: t.Log is safe for concurrent use.
 	w.t.Logf("%s", p)
 	if w.markFailed {

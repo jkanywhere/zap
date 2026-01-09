@@ -45,3 +45,11 @@ type TestingT interface {
 // Note: We currently only rely on Logf. We are including Errorf and FailNow
 // in the interface in anticipation of future need since we can't extend the
 // interface without a breaking change.
+
+// helperT is also a subset of the API provided by all *testing.T and *testing.B
+// objects. Adding it to TestingT would be a breaking change.
+type helperT interface {
+	// Helper marks the calling function as a test helper function.
+	// When printing file and line information, that function will be skipped.
+	Helper()
+}
