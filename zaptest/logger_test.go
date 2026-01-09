@@ -138,6 +138,13 @@ func TestTestLoggerErrorOutput(t *testing.T) {
 	}
 }
 
+func TestExampleLog(t *testing.T) {
+	log := NewLogger(t)
+	t.Log("Raw t.Log output")
+	log.Info("Where am I?")
+	t.Fail()
+}
+
 // testLogSpy is a testing.TB that captures logged messages.
 type testLogSpy struct {
 	testing.TB
