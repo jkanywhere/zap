@@ -91,7 +91,8 @@ func NewLogger(t TestingT, opts ...LoggerOption) *zap.Logger {
 	zapOptions = append(zapOptions, cfg.zapOptions...)
 
 	return zap.New(
-		zapcore.NewCore(
+		NewCore(
+			t,
 			zapcore.NewConsoleEncoder(zap.NewDevelopmentEncoderConfig()),
 			writer,
 			cfg.Level,
